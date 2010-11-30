@@ -34,25 +34,22 @@ Put *mtHeader* into your extensions folder. To be able to use it, add the includ
 That's all.
 
 #Examples
-**Setting a plain text header**
+
+###Setting a plain text header
 
     mtHeader::txt();
     readfile('myPoetry.txt');
 
 This tells the browser to show the upcoming content as text.
 
----
-
-**Setting this png to private**
+###Setting this png to private
 
     mtHeader::html('private');
     readfile('confidential.html');
 
 This tells the browser that the upcoming html page is private.
 
----
-
-**Telling the browser, to cache a feed for 1 hour**
+###Telling the browser, to cache a feed for 1 hour
 
     ...
     $atomFeed = createFeed($items);
@@ -61,9 +58,7 @@ This tells the browser that the upcoming html page is private.
 
 This time the outputted atom feed needs to be cached 3600 seconds by the browser. So within the next 3600 seconds this feed should be loaded from the "browsers" (client's) cache.
 
----
-
-**Telling the browser not to cache**
+###Telling the browser not to cache
 
     ...
     $captcha = createCaptchaPng('kaS9hI');
@@ -72,18 +67,14 @@ This time the outputted atom feed needs to be cached 3600 seconds by the browser
 
 This tells the browser not to cache the following png. This is quite useful for captcha images - so they aren't cached.
 
----
-
-**Setting individual headers**
+###Setting individual headers
 
     mtHeader::png(array('GreetingsTo' => 'my mom'));
     readfile('myMom.png');
 
 This header is absolutely nonsense - but possible ;) So the browser receives some greetings to my mom, every time this image is displayed.
 
----
-
-**Force download with given file name "setup.exe" 1kb size**
+###Force download with given file name "setup.exe" 1kb size
 
     $file = '/path/to/my/file-1';
     $fileSize = filesize($file);
