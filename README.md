@@ -74,7 +74,7 @@ This tells the browser not to cache the following png. This is quite useful for 
 
 This header is absolutely nonsense - but possible ;) So the browser receives some greetings to my mom, every time this image is displayed.
 
-###Force download with given file name "setup.exe" 1kb size
+###Force download with given file name "setup.exe"
 
     $file = '/path/to/my/file-1';
     $fileSize = filesize($file);
