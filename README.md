@@ -46,16 +46,20 @@ This tells the browser to show the upcoming content as text.
 This tells the browser that the upcoming html page is private.
 
 
-**Telling the browser, to cache it 1 hour**
+**Telling the browser, to cache a feed for 1 hour**
 
+    ...
+    $atomFeed = createFeed($items);
     mtHeader::atom(array('expires' => 3600));
     echo $atomFeed;
 
-This time the outputted atom needs to be cached 3600 seconds by the browser. So within the next 3600 seconds this feed should be loaded from the "browsers" (client's) cache.
+This time the outputted atom feed needs to be cached 3600 seconds by the browser. So within the next 3600 seconds this feed should be loaded from the "browsers" (client's) cache.
 
 
 **Telling the browser not to cache**
 
+    ...
+    $captcha = createCaptchaPng('kaS9hI');
     mtHeader::png('nocache');
     imagepng($captcha);
 
