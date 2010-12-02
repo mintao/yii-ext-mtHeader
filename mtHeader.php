@@ -81,9 +81,17 @@ class mtHeader
                 }
 
                 $method = 'scope' . ucfirst(strtolower($scope));
+
                 if (method_exists(__CLASS__, $method)) {
                     if (!is_array($param)) {
-                        forward_static_call(array(__CLASS__, $method), $param);
+                        if(is_null($param)) {
+                            forward_static_call(array(__CLASS__, $method));
+                        } else {
+                            forward_static_call(
+                                array(__CLASS__, $method),
+                                $param
+                            );
+                        }
                     } else {
                         forward_static_call_array(
                             array(__CLASS__, $method),
@@ -108,10 +116,10 @@ class mtHeader
     public static function scopeNocache()
     {
         self::scopeExpires(-604800);
-        self::scopePrivate();
         self::addHeader(
             array(
-                'Pragma' => 'no-cache'
+                'Pragma' => 'no-cache',
+                'Cache-Control' => 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0',
             )
         );
     }
@@ -125,11 +133,12 @@ class mtHeader
      *
      * @return void
      */
-    public static function scopeExpires($sec=300)
+    public static function scopeExpires($sec = 300)
     {
         self::addHeader(
             array(
                 'Expires' => gmdate('D, d M Y H:i:s', time() + $sec) . ' GMT',
+                'Cache-Control' => "max-age={$sec}, public, s-maxage={$sec}",
             )
         );
     }
@@ -232,6 +241,21 @@ class mtHeader
 
 
     /**
+     * Removes a already defined header
+     *
+     * @param string $key
+     * @return void
+     * @author Florian Fackler
+     */
+    public function removeHeader($key)
+    {
+        if (is_array(self::$_header) && isset(self::$_header[$key])) {
+            unset (self::$_header[$key]);
+        }
+    }
+
+
+    /**
      * Returns the right mime type for an extenion
      *
      * @param string $ext Extension
@@ -243,19 +267,19 @@ class mtHeader
         // First call of function
         if (!is_array(self::$_mimeTypes)) {
             // Try to get from cache
-            self::$_mimeTypes = Yii::app()->cache->get('mtHeaderMimeTypes');
+            self::$_mimeTypes = null;#Yii::app()->cache->get('mtHeaderMimeTypes');
             // Not in cache? Read file
             if (!is_array(self::$_mimeTypes)) {
                 self::$_mimeTypes = self::_readMimeTypes();
             }
             // Cache mime types for 28 days
-            if (is_array(self::$_mimeTypes)) {
-                Yii::app()->cache->set(
-                    'mtHeaderMimeTypes',
-                    self::$_mimeTypes,
-                    (60 * 60 * 24 * 28)
-                );
-            }
+            // if (is_array(self::$_mimeTypes)) {
+            //     Yii::app()->cache->set(
+            //         'mtHeaderMimeTypes',
+            //         self::$_mimeTypes,
+            //         (60 * 60 * 24 * 28)
+            //     );
+            // }
         }
 
         if (!array_key_exists($ext, self::$_mimeTypes)) {
@@ -272,6 +296,11 @@ class mtHeader
      */
     private static function _output()
     {
+        // Don't try to set headers when it's already too late
+        if (true === headers_sent()) {
+            return false;
+        }
+
         foreach (self::$_header as $k => $v) {
             header("$k: $v");
             // echo("$k: $v\n");
