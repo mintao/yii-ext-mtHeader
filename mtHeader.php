@@ -272,7 +272,7 @@ class mtHeader
             if (!is_array(self::$_mimeTypes)) {
                 self::$_mimeTypes = self::_readMimeTypes();
             }
-            Cache mime types for 28 days
+            // Cache mime types for 28 days
             if (is_array(self::$_mimeTypes)) {
                 Yii::app()->cache->set(
                     'mtHeaderMimeTypes',
