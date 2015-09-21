@@ -266,14 +266,16 @@ class mtHeader
     {
         // First call of function
         if (!is_array(self::$_mimeTypes)) {
+            
             // Try to get from cache
-            self::$_mimeTypes = Yii::app()->cache->get('mtHeaderMimeTypes');
+            if (isset(Yii::app()->cache)) {
+                self::$_mimeTypes = Yii::app()->cache->get('mtHeaderMimeTypes');
             // Not in cache? Read file
             if (!is_array(self::$_mimeTypes)) {
                 self::$_mimeTypes = self::_readMimeTypes();
             }
             // Cache mime types for 28 days
-            if (is_array(self::$_mimeTypes)) {
+            if (is_array(self::$_mimeTypes)&&isset(Yii::app()->cache)) {
                 Yii::app()->cache->set(
                     'mtHeaderMimeTypes',
                     self::$_mimeTypes,
