@@ -289,7 +289,7 @@ class mtHeader
         }
         return array('Content-Type' => self::$_mimeTypes[$ext]);
     }
-
+    }
 
     /**
      * The final output of the prepared headers
